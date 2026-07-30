@@ -20,10 +20,17 @@ function makePageForEpisodes(episodeList) {
     card.innerHTML = `
       <h3>${ep.name} - ${code}</h3>
       <img src="${ep.image.medium}" alt="${ep.name}">
-      <p>${ep.summary}</p>
-      <p>Data from <a href="https://www.tvmaze.com/">TVMaze.com</a></p>
-    `;
+     
+  <div class="episode-body">
+    <div class="summary">
+      ${ep.summary}
+    </div>
 
+    <p class="credit">
+      Data from <a href="https://www.tvmaze.com/">TVMaze.com</a>
+    </p>
+  </div>
+`;
     rootElem.appendChild(card);
   });
 }
