@@ -10,19 +10,23 @@
 .episode-card {
   display: flex;
   flex-direction: column;
-  height: 600px;
+  height: 540px;
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  background: white;
+  background: rgb(233, 222, 103);
 }
 
 /* Title */
 .episode-card h3 {
-  height: 60px;
-  margin: 0 0 16px;
+  background: rgb(255, 255, 255);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  height: 30px;
   display: flex;
   align-items: center;
+  color: black;
 }
 
 /* Image */
@@ -38,6 +42,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  color: rgb(0, 0, 0);
 }
 
 /* Summary */
@@ -49,6 +54,6 @@
 /* Credit */
 .credit {
   margin-top: auto;
-  font-size: 12px;
+  font-size: 15px;
   color: #555;
 }
