@@ -37,7 +37,8 @@ function makePageForEpisodes(episodeList) {
     const credit = document.createElement("a");
     credit.className = "credit";
     credit.href = ep.url;
-    credit.textContent = `${ep.name} - ${code}`;
+    credit.target = "_blank";
+    credit.textContent = "Click To Watch";
     card.appendChild(credit);
 
     rootElem.appendChild(card);
