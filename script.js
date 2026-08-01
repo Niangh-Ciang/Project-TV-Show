@@ -16,21 +16,30 @@ function makePageForEpisodes(episodeList) {
     const episodeCode = ep.number.toString().padStart(2, "0");
     const code = `S${seasonCode}E${episodeCode}`;
 
-    // Build the card content
-    card.innerHTML = `
-      <h3>${ep.name} - ${code}</h3>
-      <img src="${ep.image.medium}" alt="${ep.name}">
-     
-  <div class="episode-body">
-    <div class="summary">
-      ${ep.summary}
-    </div>
+    const title = document.createElement("h3");
+    title.textContent = `${ep.name} - ${code}`;
+    card.appendChild(title);
 
-    <p class="credit">
-      Data from <a href="https://www.tvmaze.com/">TVMaze.com</a>
-    </p>
-  </div>
-`;
+    // Image
+    const img = document.createElement("img");
+    img.src = ep.image.medium;
+    img.alt = ep.name;
+    card.appendChild(img);
+
+    const body = document.createElement("div");
+    body.className = "episode-body";
+
+    const summary = document.createElement("div");
+    summary.className = "summary";
+    summary.innerHTML = ep.summary;
+    card.appendChild(summary);
+
+    const credit = document.createElement("a");
+    credit.className = "credit";
+    credit.href = ep.url;
+    credit.textContent = `${ep.name} - ${code}`;
+    card.appendChild(credit);
+
     rootElem.appendChild(card);
   });
 }
