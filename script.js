@@ -6,43 +6,50 @@ function setup() {
 
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
-  episodeList.forEach((ep) => {
-    // Create a container for each episode
-    const card = document.createElement("div");
-    card.className = "episode-card";
+  const cards = episodeList.map(createEpisodeCard);
+  rootElem.replaceChildren(...cards);
+}
 
-    // Create episode code like S02E07
-    const seasonCode = ep.season.toString().padStart(2, "0");
-    const episodeCode = ep.number.toString().padStart(2, "0");
-    const code = `S${seasonCode}E${episodeCode}`;
+function createEpisodeCard({
+  url,
+  name,
+  season,
+  number,
+  image: { medium },
+  summary,
+}) {
+  // Create a container for each episode
+  const card = document.createElement("div");
+  card.className = "episode-card";
 
-    const title = document.createElement("h3");
-    title.textContent = `${ep.name} - ${code}`;
-    card.appendChild(title);
+  // Create episode code like S02E07
+  const seasonCode = season.toString().padStart(2, "0");
+  const episodeCode = number.toString().padStart(2, "0");
+  const code = `S${seasonCode}E${episodeCode}`;
 
-    // Image
-    const img = document.createElement("img");
-    img.src = ep.image.medium;
-    img.alt = ep.name;
-    card.appendChild(img);
+  const title = document.createElement("h3");
+  title.textContent = `${name} - ${code}`;
+  card.appendChild(title);
 
-    const body = document.createElement("div");
-    body.className = "episode-body";
+  // Image
+  const img = document.createElement("img");
+  img.src = medium;
+  img.alt = name;
+  card.appendChild(img);
 
-    const summary = document.createElement("div");
-    summary.className = "summary";
-    summary.innerHTML = ep.summary;
-    card.appendChild(summary);
+  const summaryDiv = document.createElement("div");
+  summaryDiv.className = "summary";
+  summaryDiv.innerHTML = summary;
+  card.appendChild(summaryDiv);
 
-    const credit = document.createElement("a");
-    credit.className = "credit";
-    credit.href = ep.url;
-    credit.target = "_blank";
-    credit.textContent = "Click To Watch";
-    card.appendChild(credit);
+  const credit = document.createElement("a");
+  credit.className = "credit";
+  credit.href = url;
+  credit.target = "_blank";
+  credit.textContent = "Click To Watch";
+  card.appendChild(credit);
 
-    rootElem.appendChild(card);
-  });
+  return card;
 }
 
 window.onload = setup;
