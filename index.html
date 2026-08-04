@@ -3,12 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TV Show Project by Niangh Ciang (Niangh-Ciang) displaying Game of Thrones episodes using data from TVMaze."
+    />
     <title>TV Show Project | Niangh Ciang (Niangh-Ciang)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
 
   <body>
+    <div class="controls">
+      <label for="search-input">Search Episodes:</label>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Enter episode name..."
+      />
+
+      <p id="episode-count"></p>
+    </div>
     <main id="root"></main>
     <footer class="page-credit">
       Data from <a href="https://www.tvmaze.com/">TVMaze.com</a>

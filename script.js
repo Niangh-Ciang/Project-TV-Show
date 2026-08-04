@@ -1,12 +1,25 @@
-//You can edit ALL of the code here
+const state = {
+  episodes: getAllEpisodes(),
+  searchTerm: "",
+  //selectedFilm: null
+};
+
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+  const searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("input", searchEpisodes);
+  makePageForEpisodes();
 }
 
-function makePageForEpisodes(episodeList) {
+function makePageForEpisodes() {
   const rootElem = document.getElementById("root");
-  const cards = episodeList.map(createEpisodeCard);
+  const filteredEpisodes = state.episodes.filter(
+    (episode) =>
+      episode.name.toLowerCase().includes(state.searchTerm) ||
+      episode.summary?.toLowerCase().includes(state.searchTerm),
+  );
+  const episodeCount = document.getElementById("episode-count");
+  episodeCount.textContent = `Displaying ${filteredEpisodes.length} / ${state.episodes.length} episodes`;
+  const cards = filteredEpisodes.map(createEpisodeCard);
   rootElem.replaceChildren(...cards);
 }
 
@@ -35,6 +48,9 @@ function createEpisodeCard({
   const img = document.createElement("img");
   img.src = medium;
   img.alt = name;
+  img.loading = "lazy";
+  img.width = 210;
+  img.height = 118;
   card.appendChild(img);
 
   const summaryDiv = document.createElement("div");
@@ -50,6 +66,11 @@ function createEpisodeCard({
   card.appendChild(credit);
 
   return card;
+}
+
+function searchEpisodes(event) {
+  state.searchTerm = event.target.value.toLowerCase();
+  makePageForEpisodes();
 }
 
 window.onload = setup;
