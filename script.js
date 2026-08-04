@@ -1,22 +1,43 @@
 const state = {
-  episodes: getAllEpisodes(),
+  episodes: [],
   searchTerm: "",
-  //selectedFilm: null
+  selectedEpisode: null,
 };
 
 function setup() {
+  state.episodes = getAllEpisodes();
   const searchInput = document.getElementById("search-input");
+  const episodeSelect = document.getElementById("episode-select");
+  const allOption = document.createElement("option");
+  allOption.value = "";
+  allOption.textContent = "All Episodes";
+  episodeSelect.appendChild(allOption);
+
+  state.episodes.forEach((episode, index) => {
+    const code = formatEpisodeCode(episode.season, episode.number);
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = `${code} - ${episode.name}`;
+    episodeSelect.appendChild(option);
+  });
+
   searchInput.addEventListener("input", searchEpisodes);
+  episodeSelect.addEventListener("change", jumpToEpisode);
   makePageForEpisodes();
 }
 
 function makePageForEpisodes() {
   const rootElem = document.getElementById("root");
-  const filteredEpisodes = state.episodes.filter(
-    (episode) =>
-      episode.name.toLowerCase().includes(state.searchTerm) ||
-      episode.summary?.toLowerCase().includes(state.searchTerm),
-  );
+
+  const filteredEpisodes =
+    state.selectedEpisode !== null
+      ? [state.episodes[state.selectedEpisode]]
+      : state.episodes.filter(
+          (episode) =>
+            episode.name.toLowerCase().includes(state.searchTerm) ||
+            episode.summary?.toLowerCase().includes(state.searchTerm),
+        );
+
   const episodeCount = document.getElementById("episode-count");
   episodeCount.textContent = `Displaying ${filteredEpisodes.length} / ${state.episodes.length} episodes`;
   const cards = filteredEpisodes.map(createEpisodeCard);
@@ -36,9 +57,7 @@ function createEpisodeCard({
   card.className = "episode-card";
 
   // Create episode code like S02E07
-  const seasonCode = season.toString().padStart(2, "0");
-  const episodeCode = number.toString().padStart(2, "0");
-  const code = `S${seasonCode}E${episodeCode}`;
+  const code = formatEpisodeCode(season, number);
 
   const title = document.createElement("h3");
   title.textContent = `${name} - ${code}`;
@@ -46,7 +65,7 @@ function createEpisodeCard({
 
   // Image
   const img = document.createElement("img");
-  img.src = medium;
+  img.src = medium || "";
   img.alt = name;
   img.loading = "lazy";
   img.width = 210;
@@ -70,7 +89,22 @@ function createEpisodeCard({
 
 function searchEpisodes(event) {
   state.searchTerm = event.target.value.toLowerCase();
+  state.selectedEpisode = null;
+  document.getElementById("episode-select").value = "";
   makePageForEpisodes();
+}
+
+function jumpToEpisode(event) {
+  state.selectedEpisode =
+    event.target.value === "" ? null : Number(event.target.value);
+
+  state.searchTerm = "";
+  document.getElementById("search-input").value = "";
+  makePageForEpisodes();
+}
+
+function formatEpisodeCode(season, number) {
+  return `S${String(season).padStart(2, "0")}E${String(number).padStart(2, "0")}`;
 }
 
 window.onload = setup;
