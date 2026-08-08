@@ -57,7 +57,7 @@ function createEpisodeOptions() {
   });
 }
 
-function render() {
+function filteredEpisodesFun() {
   const filteredEpisodes =
     state.selectedEpisode !== null
       ? [state.episodes.find((e) => e.id === state.selectedEpisode)]
@@ -66,6 +66,10 @@ function render() {
             episode.name.toLowerCase().includes(state.searchTerm) ||
             episode.summary?.toLowerCase().includes(state.searchTerm),
         );
+  return filteredEpisodes;
+}
+function render() {
+  const filteredEpisodes = filteredEpisodesFun();
 
   elements.episodeCount.textContent = `Displaying ${filteredEpisodes.length} / ${state.episodes.length} episodes`;
   const cards = filteredEpisodes.map(createEpisodeCard);
