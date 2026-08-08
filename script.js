@@ -1,3 +1,14 @@
+function checkStatus(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+  return response;
+}
+function loadEpisodes() {
+  return fetch("https://api.tvmaze.com/shows/82/episodes")
+    .then(checkStatus)
+    .then((response) => response.json());
+}
 const state = {
   episodes: [],
   searchTerm: "",
@@ -12,11 +23,19 @@ function setup() {
   elements.episodeCount = document.getElementById("episode-count");
   elements.root = document.getElementById("root");
 
-  state.episodes = getAllEpisodes();
-  createEpisodeOptions();
-  elements.searchInput.addEventListener("input", searchEpisodes);
-  elements.episodeSelect.addEventListener("change", jumpToEpisode);
-  render();
+  elements.root.textContent = "Loading episodes...";
+
+  loadEpisodes()
+    .then((episodes) => {
+      state.episodes = episodes;
+      createEpisodeOptions();
+      elements.searchInput.addEventListener("input", searchEpisodes);
+      elements.episodeSelect.addEventListener("change", jumpToEpisode);
+      render();
+    })
+    .catch(() => {
+      elements.root.textContent = "Error loading episodes. Please try again.";
+    });
 }
 
 function createEpisodeOptions() {
