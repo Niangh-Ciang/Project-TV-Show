@@ -34,7 +34,7 @@ function setup() {
   elements.episodeCount = document.getElementById("episode-count");
   elements.root = document.getElementById("root");
 
-  elements.root.textContent = "Loading episodes...";
+  elements.root.textContent = "Loading shows...";
 
   loadShows()
     .then((shows) => {
