@@ -6,7 +6,6 @@
   padding: 20px;
 }
 
-
 /* Controls */
 .controls {
   display: flex;
@@ -24,7 +23,8 @@
   font-weight: bold;
 }
 
-.controls input,.controls select {
+.controls input,
+.controls select {
   padding: 8px 12px;
   font-size: 16px;
   border: 1px solid #aaa;
@@ -39,7 +39,6 @@
   margin-left: auto;
   font-weight: bold;
 }
-
 
 /* Card */
 .episode-card {
@@ -121,4 +120,12 @@ footer.page-credit {
   margin-left: auto;
   margin-right: auto;
   font-size: 18px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  color: rgb(11, 11, 10);
 }
