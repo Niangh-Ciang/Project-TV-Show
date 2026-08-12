@@ -111,14 +111,7 @@ function render() {
   elements.root.replaceChildren(...cards);
 }
 
-function createEpisodeCard({
-  url,
-  name,
-  season,
-  number,
-  image: { medium },
-  summary,
-}) {
+function createEpisodeCard({ url, name, season, number, image, summary }) {
   // Create a container for each episode
   const card = document.createElement("div");
   card.className = "episode-card";
@@ -132,7 +125,7 @@ function createEpisodeCard({
 
   // Image
   const img = document.createElement("img");
-  img.src = medium || "";
+  img.src = image?.medium || "";
   img.alt = name;
   img.loading = "lazy";
   img.width = 210;
