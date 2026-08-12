@@ -14,16 +14,22 @@
 
   <body>
     <div class="controls">
-      <label for="show-select">Jump to the show:</label>
-      <select id="show-select"></select>
-      <label for="episode-select">Jump to episode:</label>
-      <select id="episode-select"></select>
-      <label for="search-input">Search Episodes:</label>
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Enter episode name..."
-      />
+      <div class="control-group">
+        <label for="show-select">Jump to the show:</label>
+        <select id="show-select"></select>
+      </div>
+      <div class="control-group">
+        <label for="episode-select">Jump to episode:</label>
+        <select id="episode-select"></select>
+      </div>
+      <div class="control-group">
+        <label for="search-input">Search Episodes:</label>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Enter episode name..."
+        />
+      </div>
 
       <p id="episode-count"></p>
     </div>
