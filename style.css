@@ -44,7 +44,8 @@
 .episode-card {
   display: flex;
   flex-direction: column;
-  height: 540px;
+  min-height: 540px;
+  height: auto;
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
