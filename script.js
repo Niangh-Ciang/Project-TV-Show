@@ -32,9 +32,16 @@ function setup() {
   elements.episodeSelect = document.getElementById("episode-select");
   elements.showSelect = document.getElementById("show-select");
   elements.episodeCount = document.getElementById("episode-count");
-  elements.root = document.getElementById("root");
+  elements.episodesList = document.getElementById("episodes-list");
 
-  elements.root.textContent = "Loading shows...";
+  //show font page
+  elements.showsList = document.getElementById("shows-list");
+  elements.backToShows = document.getElementById("back-to-shows");
+  elements.showsList.style.display = "block";
+  elements.episodesList.style.display = "none";
+  elements.backToShows.style.display = "none";
+
+  elements.showsList.textContent = "Loading shows...";
 
   loadShows()
     .then((shows) => {
@@ -47,7 +54,8 @@ function setup() {
       render();
     })
     .catch(() => {
-      elements.root.textContent = "Error loading episodes. Please try again.";
+      elements.episodesList.textContent =
+        "Error loading episodes. Please try again.";
     });
 }
 
@@ -108,7 +116,7 @@ function render() {
   const filteredEpisodes = filteredEpisodesFun();
   elements.episodeCount.textContent = `Displaying ${filteredEpisodes.length} / ${state.episodes.length} episodes`;
   const cards = filteredEpisodes.map(createEpisodeCard);
-  elements.root.replaceChildren(...cards);
+  elements.episodesList.replaceChildren(...cards);
 }
 
 function createEpisodeCard({ url, name, season, number, image, summary }) {
@@ -190,7 +198,8 @@ function jumpToShow(event) {
       render();
     })
     .catch(() => {
-      elements.root.textContent = "Error loading episodes. Please try again.";
+      elements.episodesList.textContent =
+        "Error loading episodes. Please try again.";
     });
 }
 
