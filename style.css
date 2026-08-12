@@ -135,7 +135,7 @@ footer.page-credit {
 #shows-list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 400px;
+  gap: 40px;
   padding: 20px;
 }
 .show-card {

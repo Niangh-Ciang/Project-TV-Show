@@ -14,28 +14,56 @@
 
   <body>
     <div class="controls">
-      <div class="control-group">
-        <label for="show-select">Jump to the show:</label>
-        <select id="show-select"></select>
-      </div>
-      <div class="control-group">
-        <label for="episode-select">Jump to episode:</label>
-        <select id="episode-select"></select>
-      </div>
-      <div class="control-group">
-        <label for="search-input">Search Episodes:</label>
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Enter episode name..."
-        />
+      <!-- FRONT PAGE CONTROLS -->
+      <div id="show-controls" class="controls">
+        <div class="control-group">
+          <label for="genre-search">Filtering for:</label>
+          <input
+            id="genre-search"
+            type="text"
+            placeholder="Enter genre or keyword..."
+          />
+        </div>
+
+        <div class="control-group">
+          <label id="genre-count">Found 0 shows</label>
+        </div>
+
+        <div class="control-group">
+          <select id="genre-show-select">
+            <option value="">-- Select Show --</option>
+          </select>
+        </div>
       </div>
 
+      <!-- EPISODE PAGE CONTROLS -->
+      <div id="episode-controls" class="controls">
+        <div class="control-group">
+          <label for="show-select">Jump to the show:</label>
+          <select id="show-select"></select>
+        </div>
+
+        <div class="control-group">
+          <label for="episode-select">Jump to episode:</label>
+          <select id="episode-select"></select>
+        </div>
+
+        <div class="control-group">
+          <label for="search-input">Search Episodes:</label>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Enter episode name..."
+          />
+        </div>
+
       <p id="episode-count"></p>
+      <button id="back-to-shows" style="display: none">Back to Shows list</button>
     </div>
+
+    <!-- Lists -->
     <main id="shows-list"></main>
     <main id="episodes-list"></main>
-    <button id="back-to-shows" style="display: none">Back to Shows</button>
 
     <footer class="page-credit">
       Data from <a href="https://www.tvmaze.com/">TVMaze.com</a>

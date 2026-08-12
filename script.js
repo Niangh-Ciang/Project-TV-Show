@@ -34,6 +34,14 @@ function setup() {
   elements.episodeCount = document.getElementById("episode-count");
   elements.episodesList = document.getElementById("episodes-list");
 
+  // the two control sections
+  elements.showControls = document.getElementById("show-controls");
+  elements.episodeControls = document.getElementById("episode-controls");
+
+  // front page should show show-controls and hide episode-controls
+  elements.showControls.style.display = "block";
+  elements.episodeControls.style.display = "none";
+
   //show font page
   elements.showsList = document.getElementById("shows-list");
   elements.backToShows = document.getElementById("back-to-shows");
@@ -41,15 +49,60 @@ function setup() {
   elements.episodesList.style.display = "none";
   elements.backToShows.style.display = "none";
 
+  elements.backToShows.addEventListener("click", () => {
+    // show front page controls
+    elements.showControls.style.display = "block";
+
+    // hide episode controls
+    elements.episodeControls.style.display = "none";
+
+    // show shows list
+    elements.showsList.style.display = "block";
+
+    // hide episodes list
+    elements.episodesList.style.display = "none";
+
+    // hide back button
+    elements.backToShows.style.display = "none";
+
+    // reset episode search
+    elements.searchInput.value = "";
+    state.searchTerm = "";
+    state.selectedEpisode = null;
+    elements.episodeSelect.value = "";
+
+    // reset genre search
+    elements.genreSearch.value = "";
+    elements.genreCount.textContent = `Found ${state.shows.length} shows`;
+
+    // reset dropdown to first show
+    updateGenreShowOptions(state.shows);
+
+    // show all shows again
+    renderShowsList(state.shows);
+  });
+
+  elements.genreSearch = document.getElementById("genre-search");
+  elements.genreCount = document.getElementById("genre-count");
+  elements.genreShowSelect = document.getElementById("genre-show-select");
+
+  elements.genreSearch.addEventListener("input", filterShows);
+  elements.genreShowSelect.addEventListener("change", selectFilteredShow);
+
   elements.showsList.textContent = "Loading shows...";
 
   loadShows()
     .then((shows) => {
       state.shows = shows;
+
       createShowOptions();
       createEpisodeOptions();
 
-      renderShowsList();
+      elements.genreCount.textContent = `Found ${state.shows.length} shows`;
+
+      updateGenreShowOptions(state.shows);
+
+      renderShowsList(state.shows);
 
       elements.searchInput.addEventListener("input", searchEpisodes);
       elements.episodeSelect.addEventListener("change", jumpToEpisode);
@@ -60,6 +113,33 @@ function setup() {
       elements.episodesList.textContent =
         "Error loading episodes. Please try again.";
     });
+}
+
+function filterShows(event) {
+  const term = event.target.value.toLowerCase().trim();
+
+  const filteredShows = state.shows.filter((show) => {
+    return (
+      show.name.toLowerCase().includes(term) ||
+      show.genres.join(" ").toLowerCase().includes(term) ||
+      show.summary?.toLowerCase().includes(term)
+    );
+  });
+
+  elements.genreCount.textContent = `Found ${filteredShows.length} shows`;
+
+  updateGenreShowOptions(filteredShows);
+
+  renderShowsList(filteredShows);
+}
+
+// Open the selected show from the genre dropdown
+function selectFilteredShow(event) {
+  const showId = event.target.value;
+
+  if (!showId) return;
+
+  openShow(showId);
 }
 
 function createEpisodeOptions() {
@@ -116,31 +196,108 @@ function filteredEpisodesFun() {
 }
 
 // render function for shows list
-function renderShowsList() {
-  elements.showsList.innerHTML = state.shows
+function renderShowsList(shows = state.shows) {
+  elements.showsList.innerHTML = shows
     .map(
       (show) => `
       <article class="show-card" data-id="${show.id}">
         
-        <h2 class="show-title">${show.name}</h2>
+        <h2 class="show-title" data-id="${show.id}">
+          ${show.name}
+        </h2>
 
-        <img src="${show.image?.medium}" alt="${show.name}" class="show-img">
+        <img 
+          src="${show.image?.medium || ""}" 
+          alt="${show.name}" 
+          class="show-img"
+        >
 
         <div class="show-card-content">
-          <p class="show-summary">${show.summary}</p>
+          <p class="show-summary">
+            ${show.summary || ""}
+          </p>
         </div>
 
         <div class="show-info-box">
           <p><strong>Rating:</strong> ${show.rating?.average ?? "N/A"}</p>
           <p><strong>Genres:</strong> ${show.genres.join(" | ")}</p>
           <p><strong>Status:</strong> ${show.status}</p>
-          <p><strong>Runtime:</strong> ${show.runtime} min</p>
+          <p><strong>Runtime:</strong> ${show.runtime ?? "N/A"} min</p>
         </div>
 
       </article>
     `,
     )
     .join("");
+
+  document.querySelectorAll(".show-title").forEach((title) => {
+    title.addEventListener("click", () => {
+      const showId = title.dataset.id;
+      openShow(showId);
+    });
+  });
+}
+
+function updateGenreShowOptions(shows) {
+  elements.genreShowSelect.replaceChildren();
+
+  if (shows.length === 0) {
+    const emptyOption = document.createElement("option");
+    emptyOption.value = "";
+    emptyOption.textContent = "No shows found";
+    elements.genreShowSelect.appendChild(emptyOption);
+    return;
+  }
+
+  // FIRST SHOW automatically selected
+  const firstOption = document.createElement("option");
+  firstOption.value = shows[0].id;
+  firstOption.textContent = shows[0].name;
+  elements.genreShowSelect.appendChild(firstOption);
+
+  // Add the rest of the shows
+  for (let i = 1; i < shows.length; i++) {
+    const option = document.createElement("option");
+    option.value = shows[i].id;
+    option.textContent = shows[i].name;
+    elements.genreShowSelect.appendChild(option);
+  }
+
+  // Auto-select the first show
+  elements.genreShowSelect.value = shows[0].id;
+}
+
+function openShow(showId) {
+  state.selectedShow = showId;
+
+  // hide front page controls
+  elements.showControls.style.display = "none";
+
+  // show episode controls
+  elements.episodeControls.style.display = "flex";
+
+  // hide shows list
+  elements.showsList.style.display = "none";
+
+  // show episodes list
+  elements.episodesList.style.display = "grid";
+
+  // show back button
+  elements.backToShows.style.display = "block";
+
+  if (state.episodesByShow[showId]) {
+    state.episodes = state.episodesByShow[showId];
+    createEpisodeOptions();
+    render();
+    return;
+  }
+
+  loadEpisodes(showId).then((episodes) => {
+    state.episodes = episodes;
+    state.episodesByShow[showId] = episodes;
+    createEpisodeOptions();
+    render();
+  });
 }
 
 function render() {
@@ -151,30 +308,30 @@ function render() {
 }
 
 function createEpisodeCard({ url, name, season, number, image, summary }) {
-  // Create a container for each episode
   const card = document.createElement("div");
   card.className = "episode-card";
 
-  // Create episode code like S02E07
   const code = formatEpisodeCode(season, number);
 
   const title = document.createElement("h3");
   title.textContent = `${name} - ${code}`;
   card.appendChild(title);
 
-  // Image
   const img = document.createElement("img");
   img.src = image?.medium || "";
   img.alt = name;
   img.loading = "lazy";
-  img.width = 210;
-  img.height = 118;
   card.appendChild(img);
 
-  const summaryDiv = document.createElement("div");
-  summaryDiv.className = "summary";
-  summaryDiv.innerHTML = summary;
-  card.appendChild(summaryDiv);
+  // FIX: add episode-body wrapper
+  const body = document.createElement("div");
+  body.className = "episode-body";
+
+  const summaryP = document.createElement("p");
+  summaryP.innerHTML = summary;
+  body.appendChild(summaryP);
+
+  card.appendChild(body);
 
   const credit = document.createElement("a");
   credit.className = "credit";
