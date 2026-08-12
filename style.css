@@ -130,3 +130,60 @@ footer.page-credit {
   margin-bottom: 12px;
   color: rgb(11, 11, 10);
 }
+
+/*container for all shows*/
+#shows-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 400px;
+  padding: 20px;
+}
+.show-card {
+  display: grid;
+  grid-template-columns: 180px 1fr 230px;
+  gap: 20px;
+  background: rgb(233, 222, 103);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  align-items: center;
+  margin-bottom: 20px;
+}
+.show-title {
+  grid-column: 1 / -1;
+  font-family: "Poppins", sans-serif;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-decoration: underline;
+  color: rgb(89, 89, 199);
+}
+.show-card img {
+  width: 180px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.show-card-content {
+  max-width: 100%;
+  font-size: 18px;
+  line-height: 1.4;
+}
+.show-info-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+
+  background: #f4f4f4;
+  height: 170px;
+  line-height: 1.7;
+  padding: 12px;
+  border-radius: 8px;
+  border: 3px solid #794040;
+  font-size: 17px;
+}
+.show-info-box p {
+  margin: 6px 0;
+}

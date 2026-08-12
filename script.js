@@ -48,6 +48,9 @@ function setup() {
       state.shows = shows;
       createShowOptions();
       createEpisodeOptions();
+
+      renderShowsList();
+
       elements.searchInput.addEventListener("input", searchEpisodes);
       elements.episodeSelect.addEventListener("change", jumpToEpisode);
       elements.showSelect.addEventListener("change", jumpToShow);
@@ -110,6 +113,34 @@ function filteredEpisodesFun() {
     );
   }
   return state.episodes;
+}
+
+// render function for shows list
+function renderShowsList() {
+  elements.showsList.innerHTML = state.shows
+    .map(
+      (show) => `
+      <article class="show-card" data-id="${show.id}">
+        
+        <h2 class="show-title">${show.name}</h2>
+
+        <img src="${show.image?.medium}" alt="${show.name}" class="show-img">
+
+        <div class="show-card-content">
+          <p class="show-summary">${show.summary}</p>
+        </div>
+
+        <div class="show-info-box">
+          <p><strong>Rating:</strong> ${show.rating?.average ?? "N/A"}</p>
+          <p><strong>Genres:</strong> ${show.genres.join(" | ")}</p>
+          <p><strong>Status:</strong> ${show.status}</p>
+          <p><strong>Runtime:</strong> ${show.runtime} min</p>
+        </div>
+
+      </article>
+    `,
+    )
+    .join("");
 }
 
 function render() {
