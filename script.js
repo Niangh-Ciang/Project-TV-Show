@@ -45,9 +45,18 @@ function setup() {
   //show font page
   elements.showsList = document.getElementById("shows-list");
   elements.backToShows = document.getElementById("back-to-shows");
+  elements.backToEpisodes = document.getElementById("back-to-episodes");
   elements.showsList.style.display = "block";
   elements.episodesList.style.display = "none";
   elements.backToShows.style.display = "none";
+
+  elements.backToEpisodes.addEventListener("click", () => {
+    state.selectedEpisode = null;
+    elements.episodeSelect.value = "";
+    state.searchTerm = "";
+    elements.searchInput.value = "";
+    render();
+  });
 
   elements.backToShows.addEventListener("click", () => {
     // show front page controls
@@ -139,7 +148,9 @@ function selectFilteredShow(event) {
 
   if (!showId) return;
 
-  openShow(showId);
+  const selected = state.shows.filter((show) => show.id == showId);
+
+  renderShowsList(selected);
 }
 
 function createEpisodeOptions() {
@@ -241,6 +252,28 @@ function renderShowsList(shows = state.shows) {
 function updateGenreShowOptions(shows) {
   elements.genreShowSelect.replaceChildren();
 
+  const term = elements.genreSearch.value.trim().toLowerCase();
+
+  // if there is no search term then show default option
+  if (term === "") {
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "-- Select Show --";
+    elements.genreShowSelect.appendChild(defaultOption);
+
+    // Add all shows alphabetically
+    shows.forEach((show) => {
+      const option = document.createElement("option");
+      option.value = show.id;
+      option.textContent = show.name;
+      elements.genreShowSelect.appendChild(option);
+    });
+
+    elements.genreShowSelect.value = "";
+    return;
+  }
+
+  // if typed something then auto-select first match
   if (shows.length === 0) {
     const emptyOption = document.createElement("option");
     emptyOption.value = "";
@@ -263,12 +296,13 @@ function updateGenreShowOptions(shows) {
     elements.genreShowSelect.appendChild(option);
   }
 
-  // Auto-select the first show
   elements.genreShowSelect.value = shows[0].id;
 }
 
 function openShow(showId) {
   state.selectedShow = showId;
+
+  elements.showSelect.value = showId;
 
   // hide front page controls
   elements.showControls.style.display = "none";
@@ -305,6 +339,13 @@ function render() {
   elements.episodeCount.textContent = `Displaying ${filteredEpisodes.length} / ${state.episodes.length} episodes`;
   const cards = filteredEpisodes.map(createEpisodeCard);
   elements.episodesList.replaceChildren(...cards);
+  const backBtn = document.getElementById("back-to-episodes");
+
+  if (state.selectedEpisode !== null || filteredEpisodes.length === 1) {
+    backBtn.style.display = "block";
+  } else {
+    backBtn.style.display = "none";
+  }
 }
 
 function createEpisodeCard({ url, name, season, number, image, summary }) {
@@ -323,7 +364,7 @@ function createEpisodeCard({ url, name, season, number, image, summary }) {
   img.loading = "lazy";
   card.appendChild(img);
 
-  // FIX: add episode-body wrapper
+  //add episode-body wrapper
   const body = document.createElement("div");
   body.className = "episode-body";
 

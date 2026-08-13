@@ -201,3 +201,40 @@ footer.page-credit {
   align-items: center;
   gap: 20px;
 }
+
+.button-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -40px;
+}
+
+#back-to-shows {
+  padding: 1px 12px;
+  font-size: 14px;
+  background: #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+#back-to-shows:hover {
+  background: #0264c1;
+  color: white;
+}
+
+.episode-back-btn {
+  display: none;
+  margin-left: 20px;
+  padding: 1px 12px;
+  font-size: 14px;
+  background: #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.episode-back-btn:hover {
+  background: #0264c1;
+  color: white;
+}
