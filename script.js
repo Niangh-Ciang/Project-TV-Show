@@ -147,9 +147,21 @@ function filterShows(event) {
 function selectFilteredShow(event) {
   const showId = event.target.value;
 
-  if (!showId) return;
+  if (showId === "") {
+    elements.genreSearch.value = "";
 
-  const selected = state.shows.filter((show) => show.id == showId);
+    elements.genreCount.textContent = `Found ${state.shows.length} shows`;
+
+    updateGenreShowOptions(state.shows);
+
+    renderShows(state.shows);
+
+    return;
+  }
+
+  const selected = state.shows.filter((show) => show.id === Number(showId));
+
+  elements.genreCount.textContent = `Found ${selected.length} shows`;
 
   renderShows(selected);
 }
@@ -173,6 +185,9 @@ function openShow(showId) {
 
   const selected = state.shows.find((show) => show.id == showId);
   document.getElementById("show-display").value = selected.name;
+
+  elements.genreCount.textContent = `Found 1 show`;
+  elements.genreCount.style.display = "none";
 
   // hide front page controls
   elements.showControls.style.display = "none";
@@ -334,51 +349,30 @@ function createEpisodeOptions() {
 function updateGenreShowOptions(shows) {
   elements.genreShowSelect.replaceChildren();
 
-  const term = elements.genreSearch.value.trim().toLowerCase();
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "-- Select Show --";
+  elements.genreShowSelect.appendChild(defaultOption);
 
-  // if there is no search term then show default option
-  if (term === "") {
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.textContent = "-- Select Show --";
-    elements.genreShowSelect.appendChild(defaultOption);
-
-    // Add all shows alphabetically
-    shows.forEach((show) => {
-      const option = document.createElement("option");
-      option.value = show.id;
-      option.textContent = show.name;
-      elements.genreShowSelect.appendChild(option);
-    });
-
-    elements.genreShowSelect.value = "";
-    return;
-  }
-
-  // if typed something then auto-select first match
   if (shows.length === 0) {
-    const emptyOption = document.createElement("option");
-    emptyOption.value = "";
-    emptyOption.textContent = "No shows found";
-    elements.genreShowSelect.appendChild(emptyOption);
+    defaultOption.textContent = "No shows found";
     return;
   }
 
-  // FIRST SHOW automatically selected
-  const firstOption = document.createElement("option");
-  firstOption.value = shows[0].id;
-  firstOption.textContent = shows[0].name;
-  elements.genreShowSelect.appendChild(firstOption);
-
-  // Add the rest of the shows
-  for (let i = 1; i < shows.length; i++) {
+  shows.forEach((show) => {
     const option = document.createElement("option");
-    option.value = shows[i].id;
-    option.textContent = shows[i].name;
+    option.value = show.id;
+    option.textContent = show.name;
     elements.genreShowSelect.appendChild(option);
-  }
+  });
 
-  elements.genreShowSelect.value = shows[0].id;
+  const term = elements.genreSearch.value.trim();
+
+  if (term !== "") {
+    elements.genreShowSelect.value = shows[0].id;
+  } else {
+    elements.genreShowSelect.value = "";
+  }
 }
 
 function formatEpisodeCode(season, number) {
